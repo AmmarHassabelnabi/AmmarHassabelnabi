@@ -1,0 +1,62 @@
+@ -0,0 +1,62 @@
+import mysql.connector
+
+connection = mysql.connector.connect(user = 'root', database = 'sys', password = 'ah@islam_632')
+cursor = connection.cursor()
+
+main = input("""
+Welcome to MoneyMate!
+
+With our user-friendly interface, you can easily manage your finances from the comfort of your own home. Our system allows you to:
+
+ 1 - Create account
+ 2 - Delete account
+ 3 - Withdraw funds
+ 4 - Transfer money between accounts
+ 5 - Update your personal information
+      
+To get started, please enter your account number and PIN. If you are a new customer, you can create a new account by selecting the "Create Account" option from the main menu
+
+Option: """)
+
+if main == '1':
+    create_account()
+if main == '2':
+    clear_tables()
+def create_account():
+    first_name = input("First Name: ")
+    last_name = input("Last Name: ")
+    city = input("City: ")
+    state = input("State: ")
+    zip = input("Zipcode: ")
+
+    cursor.execute("INSERT INTO customer(first_name, last_name, city, state, zip_code) VALUES(%s, %s, %s, %s, %s)", (first_name, last_name, city, state, zip))
+    connection.commit()
+
+    username = input("Create a username: ")
+    password = input("Create a password: ")
+    balance = input("Enter your current balance: ")
+
+    cursor.execute("INSERT INTO account(user_name, password, balance) VALUES(%s, %s, %s)", (username, password, balance))
+    connection.commit()
+
+    cursor.execute("SELECT * FROM customer, account")
+    result = cursor.fetchall()
+    print(result)
+
+
+def clear_tables():
+    cursor.execute("TRUNCATE TABLE customer")
+    cursor.execute("TRUNCATE TABLE account")
+    connection.commit()
+
+
+cursor.close()
+connection.close()
+#def delete_account():
+
+#def sign_in():
+
+#def view_account():
+
+#def withdraw_deposit():
